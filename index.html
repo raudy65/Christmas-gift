@@ -48,17 +48,163 @@
   <div class="container" onclick="revealGift()">
     <img id="gift" src="gift.png" alt="Clik on gift🎁">
     <img id="phone" src="phone.png" alt="Telefon" class="hidden">
-    <p id="text">🎁 Clik on gift</p>
+    <p id="text">🎁 Clik on gift🎁</p>
   </div>
 
   <script>
-    function revealGift() {
-      document.getElementById("gift").classList.add("hidden");
-      document.getElementById("phone").classList.remove("hidden");
-      document.getElementById("phone").classList.add("show");
-      document.getElementById("text").innerText = "🎉 Surprise! 🎉";
+  let clicked = false;
+
+  function startReveal() {
+    if (clicked) return;
+    clicked = true;
+
+    let count = 3;
+    const countdownEl = document.getElementById("countdown");
+    const textEl = document.getElementById("text");
+
+    textEl.innerText = "Get ready…";
+    countdownEl.innerText = count;
+
+    const timer = setInterval(() => {
+      count--;
+      if (count > 0) {
+        countdownEl.innerText = count;
+      } else {
+        clearInterval(timer);
+        countdownEl.innerText = "";
+        revealGift();
+      }
+    }, 1000);
+  }
+
+  function revealGift() {
+    document.getElementById("gift").classList.add("hidden");
+    document.getElementById("phone").classList.remove("hidden");
+    document.getElementById("phone").classList.add("show");
+    document.getElementById("text").innerText = "🎉 SURPRISE from Ladik (Laya)! 🎉";
+
+    launchConfettiSides();
+    setTimeout(launchSparklers, 300); // ⬅️ důležité zpoždění
+  }
+
+  /* =====================
+     🎊 KONFETY SHORA + Z BOKŮ
+     ===================== */
+  function launchConfettiSides() {
+    const end = Date.now() + 3000;
+
+    (function frame() {
+      for (let i = 0; i < 6; i++) {
+        createConfetti("top");
+        createConfetti("left");
+        createConfetti("right");
+      }
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+  }
+
+  function createConfetti(direction) {
+    const confetti = document.createElement("div");
+    const size = Math.random() * 8 + 6;
+
+    confetti.style.position = "fixed";
+    confetti.style.width = size + "px";
+    confetti.style.height = size + "px";
+    confetti.style.backgroundColor =
+      `hsl(${Math.random() * 360}, 100%, 60%)`;
+    confetti.style.opacity = Math.random();
+    confetti.style.pointerEvents = "none";
+    confetti.style.zIndex = 9999;
+
+    let startX, startY, endX, endY;
+
+    if (direction === "top") {
+      startX = Math.random() * window.innerWidth;
+      startY = -20;
+      endX = startX + (Math.random() * 100 - 50);
+      endY = window.innerHeight + 40;
     }
-  </script>
+
+    if (direction === "left") {
+      startX = -20;
+      startY = Math.random() * window.innerHeight;
+      endX = window.innerWidth + 40;
+      endY = startY + (Math.random() * 100 - 50);
+    }
+
+    if (direction === "right") {
+      startX = window.innerWidth + 20;
+      startY = Math.random() * window.innerHeight;
+      endX = -40;
+      endY = startY + (Math.random() * 100 - 50);
+    }
+
+    confetti.style.left = startX + "px";
+    confetti.style.top = startY + "px";
+
+    document.body.appendChild(confetti);
+
+    confetti.animate([
+      { transform: "translate(0,0)" },
+      { transform: `translate(${endX - startX}px, ${endY - startY}px)` }
+    ], {
+      duration: 2500 + Math.random() * 1500,
+      easing: "ease-out"
+    });
+
+    setTimeout(() => confetti.remove(), 4000);
+  }
+
+  /* =====================
+     ✨ PRSKAVKY KOLEM TELEFONU
+     ===================== */
+  function launchSparklers() {
+    const phone = document.getElementById("phone");
+    const rect = phone.getBoundingClientRect();
+
+    for (let i = 0; i < 50; i++) {
+      createSpark(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2
+      );
+    }
+  }
+
+  function createSpark(x, y) {
+    const spark = document.createElement("div");
+
+    spark.style.position = "fixed";
+    spark.style.width = "4px";
+    spark.style.height = "4px";
+    spark.style.background = "gold";
+    spark.style.borderRadius = "50%";
+    spark.style.left = x + "px";
+    spark.style.top = y + "px";
+    spark.style.pointerEvents = "none";
+    spark.style.zIndex = 10000;
+    spark.style.boxShadow = "0 0 12px gold";
+
+    document.body.appendChild(spark);
+
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 180 + 40;
+
+    spark.animate([
+      { transform: "translate(0,0)", opacity: 1 },
+      {
+        transform: `translate(${Math.cos(angle) * distance}px,
+                              ${Math.sin(angle) * distance}px)`,
+        opacity: 0
+      }
+    ], {
+      duration: 1000 + Math.random() * 500,
+      easing: "ease-out"
+    });
+
+    setTimeout(() => spark.remove(), 1500);
+  }
+</script>
+
 
 </body>
 </html>
