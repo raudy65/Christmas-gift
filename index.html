@@ -45,10 +45,14 @@
 </head>
 <body>
 
-  <div class="container" onclick="revealGift()">
-    <img id="gift" src="gift.png" alt="Clik on gift🎁">
-    <img id="phone" src="phone.png" alt="Telefon" class="hidden">
-    <p id="text">🎁 Clik on gift🎁</p>
+  <div class="container" onclick="startReveal()">
+  <h2 id="name">🎁 Hi my dear FINGKA!🎁 </h2>
+
+  <img id="gift" src="gift.png" alt="Clik on gift">
+  <img id="phone" src="phone.png" alt="Telefon" class="hidden">
+
+  <p id="text">Clik on gift </p>
+  <p id="countdown" style="font-size:32px;font-weight:bold;"></p>
   </div>
 
  <script>
@@ -204,8 +208,3 @@
     setTimeout(() => spark.remove(), 1500);
   }
 </script>
-
-
-
-</body>
-</html>
